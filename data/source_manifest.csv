@@ -1,0 +1,5 @@
+crop,source,dataset_or_url,license,notes
+Peach,PlantVillage,https://github.com/spMohanty/PlantVillage-Dataset,CC BY 3.0,Verify source terms before redistribution
+Strawberry,PlantVillage,https://github.com/spMohanty/PlantVillage-Dataset,CC BY 3.0,Verify source terms before redistribution
+PlantDoc,PlantDoc,https://github.com/pratikkayal/PlantDoc-Dataset,CC BY 4.0,Field-style images; verify class coverage
+Other requested crops,User/licensed source,Record exact URL/path,Record license,Only use images you are licensed to use

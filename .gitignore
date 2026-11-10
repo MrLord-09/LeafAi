@@ -1,0 +1,15 @@
+.venv/
+.vscode/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+data/*
+!data/DATASET_SOURCES.md
+!data/disease_catalog.json
+!data/source_manifest.csv
+backend/*.keras
+backend/*.candidate.*
+backend/*.db
+backend/*.db-*
+backend/history_images/
+backend/model_artifacts/

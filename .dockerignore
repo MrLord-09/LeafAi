@@ -1,0 +1,13 @@
+.git
+.venv
+.vscode
+**/__pycache__
+**/*.py[cod]
+data/*
+!data/disease_catalog.json
+backend/*.keras
+backend/*.candidate.*
+backend/*.db
+backend/*.db-*
+backend/history_images
+backend/model_artifacts

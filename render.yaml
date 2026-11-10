@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: leafai
+    runtime: docker
+    plan: standard
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    disk:
+      name: leafai-data
+      mountPath: /var/data
+      sizeGB: 5
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LEAF_AI_DATA_DIR
+        value: /var/data
+      - key: ADMIN_COOKIE_SECURE
+        value: "true"
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>LeafAI Admin</title>
+  <link rel="stylesheet" href="/static/admin.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">🌿 LeafAI <span>Admin</span></a>
+    <div id="accountBar" class="account-bar" hidden>
+      <span id="accountName"></span>
+      <button id="logoutButton" class="button button-quiet" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="loginPanel" class="login-card">
+      <p class="eyebrow">Restricted area</p>
+      <h1>Administrator sign in</h1>
+      <p class="muted">Sign in with the configured site administrator account.</p>
+      <form id="loginForm">
+        <label for="username">Username</label>
+        <input id="username" name="username" value="Alam" autocomplete="username" required maxlength="128" />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="1024" />
+        <button class="button button-primary full-width" type="submit">Sign in</button>
+      </form>
+      <p id="loginMessage" class="message" role="status"></p>
+    </section>
+
+    <div id="dashboard" hidden>
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">Plant health management</p>
+          <h1>Admin dashboard</h1>
+          <p class="muted">Manage scan records and the guidance shown with diagnoses.</p>
+        </div>
+      </div>
+
+      <section class="metrics" aria-label="Scan overview">
+        <article class="metric-card"><span>Total scans</span><strong id="totalScans">0</strong></article>
+        <article class="metric-card"><span>Scans today</span><strong id="scansToday">0</strong></article>
+        <article class="metric-card"><span>Diseases seen</span><strong id="diseasesSeen">0</strong></article>
+        <article class="metric-card"><span>Guides</span><strong id="guideCount">0</strong></article>
+      </section>
+
+      <nav class="tabs" aria-label="Admin sections">
+        <button class="tab active" data-panel="historyPanel" type="button">Search history</button>
+        <button class="tab" data-panel="guidesPanel" type="button">Disease guidance</button>
+      </nav>
+
+      <section id="historyPanel" class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Search history</h2>
+            <p class="muted">Images are private and retained until an admin deletes them.</p>
+          </div>
+          <button id="deleteAllButton" class="button button-danger" type="button">Delete all history</button>
+        </div>
+        <div class="filters">
+          <label class="search-label" for="historySearch">Search disease or filename</label>
+          <input id="historySearch" type="search" placeholder="Search scans…" />
+          <label class="search-label" for="classFilter">Disease class</label>
+          <select id="classFilter"><option value="">All classes</option></select>
+        </div>
+        <p id="historyMessage" class="message" role="status"></p>
+        <div id="historyList" class="history-list"></div>
+        <div class="pagination">
+          <button id="previousPage" class="button button-quiet" type="button">← Newer</button>
+          <span id="pageLabel" class="muted"></span>
+          <button id="nextPage" class="button button-quiet" type="button">Older →</button>
+        </div>
+      </section>
+
+      <section id="guidesPanel" class="panel" hidden>
+        <div class="panel-heading">
+          <div>
+            <h2>Disease guidance</h2>
+            <p class="muted">Edit symptoms and crop-specific control guidance shown after scans.</p>
+          </div>
+        </div>
+        <label for="guideSelect">Disease class</label>
+        <select id="guideSelect"></select>
+        <form id="guideForm" class="guide-form">
+          <label for="guideName">Display name</label>
+          <input id="guideName" required maxlength="200" />
+          <label for="guideSymptoms">Symptoms</label>
+          <textarea id="guideSymptoms" required rows="4" maxlength="5000"></textarea>
+          <label for="guideOrganic">Organic / IPM control</label>
+          <textarea id="guideOrganic" required rows="4" maxlength="5000"></textarea>
+          <label for="guideChemical">Chemical control</label>
+          <textarea id="guideChemical" required rows="4" maxlength="5000"></textarea>
+          <label for="guideSource">Source / verification note</label>
+          <input id="guideSource" required maxlength="1000" />
+          <div class="form-actions">
+            <p id="guideMessage" class="message" role="status"></p>
+            <button class="button button-primary" type="submit">Save guidance</button>
+          </div>
+          <p class="notice">For India, confirm current CIB&amp;RC registration, crop/disease label, dose, pre-harvest interval and local extension guidance before recommending any pesticide. This image classifier is not a laboratory diagnosis.</p>
+        </form>
+      </section>
+    </div>
+  </main>
+  <script src="/static/admin.js" defer></script>
+</body>
+</html>

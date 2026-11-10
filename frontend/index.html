@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeafAI — AI Plant Disease Scanner</title>
+  <meta name="description" content="Diagnose plant diseases instantly using AI. Upload a plant image and get detailed remedies, organic treatments, and chemical controls in seconds." />
+  <meta name="theme-color" content="#030712" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LeafAI" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/static/icons/leafai-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Animated background particles -->
+  <div class="bg-particles" id="bgParticles"></div>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo" id="navLogo">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">LeafAI</span>
+      </a>
+      <button class="install-app-btn" id="installAppBtn" type="button">Install app</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#scanner" class="nav-link" id="navScanner">Scanner</a>
+        <a href="#how-it-works" class="nav-link" id="navHowItWorks">How It Works</a>
+        <a href="#crop-news" class="nav-link" id="navNews">Crop News</a>
+        <a href="#scanner" class="nav-cta" id="navCta">Scan Now →</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <dialog class="install-help-dialog" id="installHelpDialog" aria-labelledby="installHelpTitle">
+    <div class="install-help-content">
+      <h2 id="installHelpTitle">Add LeafAI to your home screen</h2>
+      <p id="installHelpText">Use your browser’s menu to install LeafAI. On iPhone or iPad, tap Share, then “Add to Home Screen”.</p>
+      <button class="btn-camera" id="closeInstallHelpBtn" type="button">Got it</button>
+    </div>
+  </dialog>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge" id="heroBadge">
+        <span class="badge-dot"></span>
+        AI-Powered · Installable · 38 Disease Classes
+      </div>
+      <h1 class="hero-title" id="heroTitle">
+        Diagnose Plant<br/>
+        <span class="gradient-text">Disease in Seconds</span>
+      </h1>
+      <p class="hero-subtitle" id="heroSubtitle">
+        Upload a leaf photo and our TFLite model, trained on the PlantVillage dataset, delivers a precise diagnosis with certified organic &amp; chemical treatment plans — instantly.
+      </p>
+      <div class="hero-actions" id="heroActions">
+        <a href="#scanner" class="btn-primary" id="heroCtaBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Start Scanning
+        </a>
+        <a href="#how-it-works" class="btn-secondary" id="heroLearnBtn">Learn More</a>
+      </div>
+      <div class="hero-stats" id="heroStats">
+        <div class="stat-item">
+          <span class="stat-number">38</span>
+          <span class="stat-label">Disease Classes</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">&lt;40ms</span>
+          <span class="stat-label">Inference Time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">14+</span>
+          <span class="stat-label">Plant Species</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" id="heroVisual">
+      <div class="phone-mockup">
+        <div class="phone-screen">
+          <div class="phone-scan-demo">
+            <div class="scan-line" id="scanLine"></div>
+            <div class="leaf-placeholder">🍃</div>
+            <div class="scan-result-chip" id="scanResultChip">
+              <span class="chip-dot chip-green"></span>
+              Heath percentage
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="floating-card card-1" id="floatingCard1">
+        <span class="card-icon">🔬</span>
+        <div>
+          <div class="card-title">Disease Detected</div>
+          <div class="card-val">Late Blight</div>
+        </div>
+      </div>
+      <div class="floating-card card-2" id="floatingCard2">
+        <span class="card-icon">💊</span>
+        <div>
+          <div class="card-title">Treatment Ready</div>
+          <div class="card-val">2 Options</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scanner Section -->
+  <section class="scanner-section" id="scanner">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">🔍 Scanner</span>
+        <h2 class="section-title" id="scannerTitle">Diagnose Your Plant</h2>
+        <p class="section-subtitle">Upload a clear image of the affected area for analysis</p>
+      </div>
+
+      <!-- API Config -->
+      <div class="api-config" id="apiConfig">
+        <label for="apiUrl" class="config-label">Backend API URL</label>
+        <div class="config-input-row">
+          <input type="text" id="apiUrl" class="config-input" value="" placeholder="/api/v1/scan or http://127.0.0.1:8000/api/v1/scan" />
+          <button class="config-test-btn" id="testApiBtn" onclick="testApiConnection()">Test Connection</button>
+        </div>
+        <div class="api-status" id="apiStatus"></div>
+      </div>
+
+      <div class="scanner-card" id="scannerCard">
+        <!-- Upload Area -->
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg" hidden />
+          <div class="upload-content" id="uploadContent">
+            <div class="upload-icon-wrap">
+              <svg class="upload-icon" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="32" fill="url(#uploadGrad)"/>
+                <path d="M32 20v16M25 27l7-7 7 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M22 40h20" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                <defs>
+                  <linearGradient id="uploadGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#22c55e"/>
+                    <stop offset="1" stop-color="#16a34a"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <p class="upload-title">Drop your plant image here</p>
+            <p class="upload-sub">or click to browse · JPEG &amp; PNG · max 5MB</p>
+            <div class="upload-btns">
+              <button class="btn-upload" id="uploadBtn" onclick="document.getElementById('fileInput').click()">
+                📁 Choose File
+              </button>
+              <button class="btn-camera" id="cameraBtn" onclick="openCamera()">
+                📷 Use Camera
+              </button>
+              <button class="btn-camera" id="ipCameraBtn" onclick="openIpCameraSetup()">
+                📡 IP Webcam
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview State -->
+          <div class="preview-content" id="previewContent" style="display:none;">
+            <img id="previewImg" class="preview-img" alt="Leaf preview" />
+            <div class="preview-actions">
+              <button class="btn-camera" id="retakePhotoBtn" onclick="retakePhoto()" style="display:none;">📷 Retake Photo</button>
+              <button class="btn-change" id="stopCapturedCameraBtn" onclick="stopCameraCapture()" style="display:none;">✕ Stop Camera</button>
+              <button class="btn-change" id="changeImgBtn" onclick="resetUpload()">← Change Image</button>
+              <button class="btn-scan" id="runScanBtn" onclick="runDiagnostic()">
+                <span class="scan-btn-text">🔍 Run Diagnostic Scan</span>
+                <span class="scan-btn-loader" style="display:none;">
+                  <span class="loader-ring"></span> Analysing...
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Camera State -->
+          <div class="camera-content" id="cameraContent" style="display:none;">
+            <video id="cameraVideo" autoplay playsinline class="camera-video"></video>
+            <div class="camera-controls">
+              <button class="btn-capture" id="captureBtn" onclick="capturePhoto()">📸 Capture</button>
+              <button class="btn-change" id="closeCameraBtn" onclick="closeCamera()">✕ Close</button>
+            </div>
+          </div>
+          <div class="ip-camera-setup" id="ipCameraSetup" style="display:none;">
+            <h3>Connect an IP Webcam</h3>
+            <p>Enter the server address shown in the IP Webcam app. Use the same Wi-Fi network; the snapshot path is added automatically.</p>
+            <form class="ip-camera-form" onsubmit="connectIpCamera(); return false;">
+              <input type="text" id="ipCameraUrl" class="config-input" inputmode="url" autocomplete="url" placeholder="http://192.168.1.25:8080 or 192.168.1.25:8080" required />
+              <div class="camera-controls">
+                <button class="btn-capture" id="connectIpCameraBtn" type="submit">Connect</button>
+                <button class="btn-change" type="button" onclick="closeIpCamera()">✕ Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div class="ip-camera-content" id="ipCameraContent" style="display:none;">
+            <img id="ipCameraPreview" class="camera-video" alt="IP Webcam live preview" />
+            <p class="ip-camera-status" id="ipCameraStatus" role="status" aria-live="polite"></p>
+            <div class="camera-controls">
+              <button class="btn-capture" id="scanIpCameraBtn" onclick="runIpCameraDiagnostic()">🔍 Capture 5 &amp; Diagnose</button>
+              <button class="btn-change" id="closeIpCameraPreviewBtn" onclick="closeIpCamera()">✕ Close</button>
+            </div>
+          </div>
+          <canvas id="cameraCanvas" hidden></canvas>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel" id="resultsPanel" style="display:none;">
+          <div class="results-header">
+            <h3 class="results-title" id="resultsTitle">📊 Diagnostic Report</h3>
+            <button class="results-close" id="resultsClose" onclick="closeResults()">✕</button>
+          </div>
+          <figure class="diagnostic-snapshot" id="diagnosticSnapshot" style="display:none;">
+            <img id="diagnosticSnapshotImg" alt="Final IP Webcam snapshot used for this diagnosis" />
+            <figcaption>The captured crop image used for this diagnosis</figcaption>
+          </figure>
+
+          <!-- Confidence Meter -->
+          <div class="confidence-block" id="confidenceBlock">
+            <div class="confidence-info">
+              <span class="disease-label" id="diseaseLabel">—</span>
+              <span class="confidence-pct" id="confidencePct">—%</span>
+            </div>
+            <div class="confidence-bar-wrap">
+              <div class="confidence-bar" id="confidenceBar"></div>
+            </div>
+            <div class="confidence-caption" id="confidenceCaption"></div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="result-tabs">
+            <button class="tab-btn active" id="tabSymptoms" onclick="switchTab('symptoms')">📋 Symptoms</button>
+            <button class="tab-btn" id="tabOrganic" onclick="switchTab('organic')">🌱 Organic</button>
+            <button class="tab-btn" id="tabChemical" onclick="switchTab('chemical')">🧪 Chemical</button>
+          </div>
+
+          <div class="tab-content" id="tabContentSymptoms">
+            <p class="tab-text" id="textSymptoms"></p>
+          </div>
+          <div class="tab-content" id="tabContentOrganic" style="display:none;">
+            <p class="tab-text" id="textOrganic"></p>
+          </div>
+          <div class="tab-content" id="tabContentChemical" style="display:none;">
+            <p class="tab-text" id="textChemical"></p>
+          </div>
+
+          <div class="result-citation" id="resultCitation"></div>
+        </div>
+      </div>
+
+      <!-- Error Banner -->
+      <dialog class="error-banner" id="errorBanner" aria-labelledby="errorText">
+        <span class="error-icon">⚠️</span>
+        <span class="error-text" id="errorText"></span>
+        <button id="errorClose" class="error-close" type="button" aria-label="Dismiss error">✕</button>
+      </dialog>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-section" id="how-it-works">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">⚙️ Process</span>
+        <h2 class="section-title" id="howTitle">How It Works</h2>
+        <p class="section-subtitle">From leaf to diagnosis in under 40 milliseconds</p>
+      </div>
+      <div class="steps-grid" id="stepsGrid">
+        <div class="step-card" id="step1">
+          <div class="step-number">01</div>
+          <div class="step-icon">📸</div>
+          <h3 class="step-title">Capture &amp; Upload</h3>
+          <p class="step-desc"><span class="step-desc-full">Take a photo of the affected leaf using your camera or upload an existing image. JPEG and PNG formats are supported up to 5MB.</span><span class="step-desc-mobile">Take or upload a clear photo of the affected leaf.</span></p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card" id="step2">
+          <div class="step-number">02</div>
+          <div class="step-icon">🔬</div>
+          <h3 class="step-title">OpenCV Preprocessing</h3>
+          <p class="step-desc"><span class="step-desc-full">The image is preprocessed using OpenCV — cropped, normalized, and resized to 224×224px to match the TFLite model's input tensor.</span><span class="step-desc-mobile">OpenCV prepares and resizes the photo for analysis.</span></p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card" id="step3">
+          <div class="step-number">03</div>
+          <div class="step-icon">🧠</div>
+          <h3 class="step-title">AI Inference</h3>
+          <p class="step-desc"><span class="step-desc-full">A quantized TFLite model trained on the PlantVillage dataset classifies the leaf across 38 disease classes in under 25ms.</span><span class="step-desc-mobile">The AI checks the photo against trained disease classes.</span></p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card" id="step4">
+          <div class="step-number">04</div>
+          <div class="step-icon">💊</div>
+          <h3 class="step-title">Treatment Report</h3>
+          <p class="step-desc"><span class="step-desc-full">A SQLite database lookup returns certified symptoms, organic remedies, and chemical controls from peer-reviewed agricultural sources.</span><span class="step-desc-mobile">View symptoms and treatment guidance for your plant.</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- India crop news -->
+  <section class="news-section" id="crop-news">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">📰 India agriculture</span>
+        <h2 class="section-title">Recent Crop News</h2>
+        <p class="section-subtitle">Updates for Indian farmers on crops, agriculture and rural communities.</p>
+      </div>
+      <p class="news-status" id="newsStatus" role="status" aria-live="polite">Loading the latest news…</p>
+      <button class="news-retry" id="newsRetry" type="button" hidden>Try again</button>
+      <div class="news-grid" id="newsGrid"></div>
+      <p class="news-attribution">News and thumbnails provided by Bing News; links open the original publisher.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="logo-icon">🌿</span>
+        <span class="logo-text">LeafAI</span>
+        <p class="footer-tagline">Powered by TFLite · PlantVillage Dataset · FastAPI</p>
+      </div>
+      <div class="footer-links">
+        <a href="#scanner" class="footer-link">Scanner</a>
+        <a href="#how-it-works" class="footer-link">How It Works</a>
+        <a href="#crop-news" class="footer-link">Crop News</a>
+        <a href="/admin" class="footer-link">Admin</a>
+      </div>
+      <p class="footer-copy">Built with ❤️ for sustainable agriculture · 2026</p>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
